@@ -1,0 +1,30 @@
+<div class="container1">
+    <% user.likedposts.forEach(element=> { %>
+        <div class="box">
+            <% if (element.image.match(/\.(mp4|webm|ogg)$/i)) { %>
+                <!-- Video Tag -->
+                <video class="rounded-3" width="100%" autoplay loop>
+                    <source src="/images/uploads/<%= element.image %>" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <% } else { %>
+                    <!-- Image Tag -->
+                    <img src="/images/uploads/<%= element.image %>" alt="image" />
+                    <% } %>
+
+                        <div class="post-container" id="post-<%= element._id %>">
+                            <div class="unlike d-flex justify-content-end">
+                                <button class="btn btn-danger rounded-circle unlike-btn" data-id="<%= element._id %>">
+                                    <i class="fa-regular fa-thumbs-down"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="caption">
+                            <p class="m-0 p-0">
+                                <%= element.postcaption %>
+                            </p>
+                        </div>
+        </div>
+        <% }) %>
+</div>

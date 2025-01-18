@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('./partials/header.ejs') %>
+
+        <link rel="stylesheet" href="/stylesheets/feed.css">
+        <title>Feed</title>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs') %>
+
+        <div class="container1">
+            <% posts.forEach(post=> { %>
+                <div class="box ">
+
+                    <a href="/images/uploads/<%= post.image %>">
+                        <% if (post.image.match(/\.(mp4|webm|ogg)$/i)) { %>
+                            <!-- Video Tag -->
+                            <video class="rounded-3" width="100%" autoplay loop>
+                                <source src="/images/uploads/<%= post.image %>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <% } else { %>
+                                <!-- Image Tag -->
+                                <img src="/images/uploads/<%= post.image %>" alt="image">
+                                <% } %>
+                    </a>
+                    <div class="download d-flex justify-content-end">
+                        <a href="/images/uploads/<%= post.image %>" download
+                            style="text-decoration: none; color: white">
+                            <button class="btn btn-success rounded-circle">
+                                <i class="fa-solid fa-download"></i></button>
+                        </a>
+                    </div>
+                    <div class="like d-flex justify-content-end">
+                        <button class="btn btn-primary rounded-circle like-btn" data-id="<%= post._id %>">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </button>
+                    </div>
+
+                    <div class="caption">
+                        <p class="m-0 p-0">
+                            <%= post.postcaption %>
+                        </p>
+                        <p class="m-0 p-0 text-end fw-bold">~ <%= post.user.username %>
+                        </p>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+
+        <%- include('./partials/footer.ejs') %>
+
+
+
+            <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+                crossorigin="anonymous"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const likeButtons = document.querySelectorAll(".like-btn");
+
+                    likeButtons.forEach(button => {
+                        button.addEventListener("click", async function () {
+                            const postId = this.getAttribute("data-id");
+
+                            try {
+                                const response = await fetch("/like", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ id: postId }),
+                                });
+
+                                const result = await response.json();
+
+                                if (result.success) {
+                                    alert("Post liked successfully!"); // Update UI or notify user
+                                } else {
+                                    alert(result.message);
+                                }
+                            } catch (error) {
+                                console.error("Login required! to like post");
+                            }
+                        });
+                    });
+                });
+            </script>
+
+
+
+
+</body>
+
+
+</html>
